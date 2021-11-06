@@ -16,10 +16,13 @@ with open('hours.csv') as csv_file:
                 print('we are in the header so do nothing')
                 line_count = line_count + 1
             else:
-                for i in range(0, len(dayarray)-1) :
+                for i in range(0, len(dayarray)) :
+                    curkey = row[0]
                     currow=row[4]
                     if currow.find(dayarray[i]) == -1:
                         timedict[dayarray[i]]={'Open':'N/A','Closed':'N/A'}
+                        # rowdict[line_count]=timedict
+                        # rowdict[line_count].append({'keyword':curkey})
                         continue
                     dayindex=currow.find(dayarray[i])
                     startoftime=dayindex+len(dayarray[i])+4
@@ -34,18 +37,20 @@ with open('hours.csv') as csv_file:
                         closetime=timeofinterest[timeofinterest.find('?')+1:]
                         openclosedict={'Open':opentime,'Closed':closetime}
                         timedict[dayarray[i]]=openclosedict
-                    print(timedict)
+                    # print(timedict)
                 rowdict[line_count]=timedict
+                rowdict[line_count].update({'keyword':curkey})
                 timedict = {}
                 line_count += 1
     print(f'Processed {line_count} lines.')
 
 
-# with open('employee_file.csv', mode='w') as employee_file:
-#     employee_writer = csv.writer(employee_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
-#     employee_writer.writerow(['John Smith', 'Accounting', 'November'])
-#     employee_writer.writerow(['Erica Meyers', 'IT', 'March'])
+with open('ffloutput.csv', mode='w') as fflout:
+     employee_writer = csv.writer(fflout, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+     employee_writer.writerow(['keyword', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
+     for i in range(1, line_count) :
+        employee_writer.writerow([rowdict[i]['keyword'], rowdict[i]['Sunday'], rowdict[i]['Monday'], rowdict[i]['Tuesday'], rowdict[i]['Wednesday'], rowdict[i]['Thursday'], rowdict[i]['Friday'], rowdict[i]['Saturday']])
+  
 
 
     
